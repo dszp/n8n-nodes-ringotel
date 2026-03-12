@@ -1,0 +1,721 @@
+{
+  "info": {
+    "_postman_id": "407d805a-b756-4abb-b0de-7a3e32dcb5ea",
+    "name": "Ringotel Messaging API",
+    "description": "### About Messaging API\n\nThis Messaging API provides a mechanism to send text messages and files to Ringotel users from a third-party web service or application, as well as receive messages and notifications to the specified webhook.\n\n### Transport\n\nThis Messaging API uses JSON as its communication format. You can use HTTP as a transport protocol. The server is listening to the HTTP requests over the SSL/TLS protocol on the 443 port.\n\n### Authentication and Authorization\n\nUse API Key generated in your Ringotel Shell admin portal as a Bearer token to authenticate requests on the server.\n\nAll API calls should be made to the admin portal URL:\n\n`https://shell.ringotel.co/api`\n\n### Requests format\n\nThe requests format includes `method` and `params` fields.  \nThe successful response from the server includes the `result` object. In case of error, the `error` object will be returned.\n\n### Example\n\nRequest:\n\n`{“method”: “getChatUsers”, “params”: { \"orgid\":\"16029670196176812345\" }}`\n\nResponse:\n\n`{ “result”: [ { \"phone\": \"9001\", \"name\": \"9001\", \"id\": \"16266023844241412565\", \"state\": 2 }, { \"phone\": \"9002\", \"name\": \"9002\", \"id\": \"16271184912873588819\", \"state\": 2 }, ]}`\n\n### **IMPORTANT**\n\nRingotel's APIs are not intended for code learning, and our support team does not have the ability for code mentoring. Using the Ringotel API means that the developer has at least a basic understanding of the HTTP protocol and the coding skills to implement API integration using the programming language of their choice.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "15250631"
+  },
+  "item": [
+    {
+      "name": "Webhook Notifications",
+      "item": [
+        {
+          "name": "Text Message",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"method\":\"message\",\n\t\"params\":{\n\t\t\"to\": \"{{sender_phone}}\",\n\t\t\"from\": \"{{user_phone}}\",\n\t\t\"orgid\": \"{{orgid}}\",\n\t\t\"userid\": \"{{userid}}\",\n\t\t\"messageid\": \"{{messageid}}\",\n\t    \"sessionid\": \"{{sessionid}}\",\n\t\t\"content\":\"Hello World!\",\n\t\t\"type\": 1\n\t},\n\t\"api_key\": \"{{token}}\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{webhook_url}}",
+              "host": [
+                "{{webhook_url}}"
+              ]
+            },
+            "description": "Provide parameter `senderid` instead of `to` where applicable.\n\n`\"type\": 1` - text message\n\n`\"type\": 2` - file"
+          },
+          "response": []
+        },
+        {
+          "name": "File",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"method\":\"message\",\n\t\"params\":{\n\t\t\"to\": \"{{sender_phone}}\",\n\t\t\"from\": \"{{user_phone}}\",\n\t\t\"orgid\": \"{{orgid}}\",\n\t\t\"userid\": \"{{userid}}\",\n\t\t\"messageid\": \"{{messageid}}\",\n\t    \"sessionid\": \"{{sessionid}}\",\n\t\t\"content\": \"...file content...\",\n\t\t\"type\": 2\n\t},\n\t\"api_key\": \"{{token}}\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{webhook_url}}",
+              "host": [
+                "{{webhook_url}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delivery report",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"method\":\"delivered\",\n\t\"params\":{\n\t\t\"messageid\": \"{{messageid}}\",\n\t    \"sessionid\": \"{{sessionid}}\"\n\t},\n\t\"api_key\": \"{{token}}\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{webhook_url}}",
+              "host": [
+                "{{webhook_url}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Read report",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"method\":\"read\",\n\t\"params\":{\n\t    \"sessionid\": \"{{sessionid}}\"\n\t},\n\t\"api_key\": \"{{token}}\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{webhook_url}}",
+              "host": [
+                "{{webhook_url}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Typing indication",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"method\":\"typing\",\n\t\"params\":{\n\t    \"sessionid\": \"{{sessionid}}\",\n        \"state\": \"on\"\n\t},\n\t\"api_key\": \"{{token}}\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{webhook_url}}",
+              "host": [
+                "{{webhook_url}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Message updated",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"method\":\"updated\",\n\t\"params\":{\n\t\t\"messageid\": \"{{messageid}}\",\n\t\t\"content\":\"Hello World!\"\n\t},\n\t\"api_key\": \"{{token}}\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{webhook_url}}",
+              "host": [
+                "{{webhook_url}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Message deleted",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"method\":\"deleted\",\n\t\"params\":{\n\t\t\"messageid\": \"{{messageid}}\"\n\t},\n\t\"api_key\": \"{{token}}\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{webhook_url}}",
+              "host": [
+                "{{webhook_url}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "To receive messages and notifications from the Ringotel platform, provide `webhook` parameter when creating an API Key. To authenticate requests coming to your webhook, map the `api_key` parameter that is included in the body of each request with the Ringotel API Key created in your Ringotel account. \n\nYou web server can receive the following notifications:\n\n- [Message](#1)\n- [Delivery report](#2)\n- [Read report](#3)\n- [Typing indication](#4)\n- [Message updated](#5)\n- [Message deleted](#6)",
+      "auth": {
+        "type": "noauth"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API Methods",
+      "item": [
+        {
+          "name": "Get a list of users",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"method\": \"getChatUsers\",\n    \"params\": {\n            \"orgid\": \"{{orgid}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{request_url}}",
+              "host": [
+                "{{request_url}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send a message",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "Seor8ELdEztdyc69f3NSWaNFTD9QBPF8z1Ls0eMFU5AZ8fIFEZy9DDAPE6evMv5P",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"method\": \"message\",\n    \"params\":{\n\t    \"orgid\": \"{{orgid}}\",\n        \"from\": \"{{sender_phone}}\",\n        \"to\": \"{{user_phone}}\",\n        \"content\": \"Hi there 👋\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{request_url}}",
+              "host": [
+                "{{request_url}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Send a message",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"method\": \"message\",\n    \"params\":{\n\t    \"orgid\": \"{{orgid}}\",\n        \"from\": \"{{sender_phone}}\",\n        \"to\": \"{{user_phone}}\",\n        \"content\": \"Hi there 👋\"\n    }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{request_url}}",
+                  "host": [
+                    "{{request_url}}"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "Text",
+              "header": null,
+              "cookie": [],
+              "body": null
+            },
+            {
+              "name": "Send a message (advanced)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"method\": \"message\",\n    \"params\":{\n\t    \"orgid\": \"{{orgid}}\",\n        \"senderid\": \"{{senderid}}\",\n        \"sendername\": \"{{sendername}}\",\n        \"senderinfo\": {\n            \"phone\": \"{{sender_phone}}\",\n            \"email\": \"{{sender_email}}\"\n        },\n        \"userid\": \"{{userid}}\",\n        \"content\": \"Hello World!\"\n    }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{request_url}}",
+                  "host": [
+                    "{{request_url}}"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "Text",
+              "header": null,
+              "cookie": [],
+              "body": null
+            }
+          ]
+        },
+        {
+          "name": "Send a file",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"method\": \"message\",\n    \"params\":{\n\t    \"domain\": \"companyabc\",\n        \"from\": \"1234567890\",\n        \"to\": \"501\",\n        \"content\": \"https://example.com/b003-21ab-cd73-ef91-4890b8399f64.jpg\",\n        \"type\": 7\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{request_url}}",
+              "host": [
+                "{{request_url}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Send a file",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "orgid",
+                      "value": "{{orgid}}",
+                      "type": "text"
+                    },
+                    {
+                      "key": "to",
+                      "value": "{{user_phone}}\n",
+                      "type": "text"
+                    },
+                    {
+                      "key": "from",
+                      "value": "{{sender_phone}}",
+                      "type": "text"
+                    },
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "value": null
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{request_url}}",
+                  "host": [
+                    "{{request_url}}"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "Text",
+              "header": null,
+              "cookie": [],
+              "body": null
+            },
+            {
+              "name": "Send a file using link",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"method\": \"message\",\n    \"params\":{\n\t    \"orgid\": \"{{orgid}}\",\n        \"from\": \"{{sender_phone}}\",\n        \"to\": \"{{user_phone}}\",\n        \"content\": \"https://ringotel-app-distribution.s3.eu-west-1.amazonaws.com/assets/ringotel-logo.png\",\n        \"type\": 7\n    }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{request_url}}",
+                  "host": [
+                    "{{request_url}}"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "Text",
+              "header": null,
+              "cookie": [],
+              "body": null
+            },
+            {
+              "name": "Send a file (advanced)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "orgid",
+                      "value": "{{orgid}}",
+                      "type": "text"
+                    },
+                    {
+                      "key": "userid",
+                      "value": "{{userid}}",
+                      "type": "text"
+                    },
+                    {
+                      "key": "senderid",
+                      "value": "{{senderid}}",
+                      "type": "text"
+                    },
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "value": null
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{request_url}}",
+                  "host": [
+                    "{{request_url}}"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "Text",
+              "header": null,
+              "cookie": [],
+              "body": null
+            }
+          ]
+        },
+        {
+          "name": "Send indication - Delivered",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"method\": \"delivered\",\n    \"params\":{\n\t    \"orgid\": \"{{orgid}}\",\n        \"messageid\": \"{{messageid}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{request_url}}",
+              "host": [
+                "{{request_url}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send indication - Deleted",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"method\": \"deleted\",\n    \"params\":{\n\t    \"orgid\": \"{{orgid}}\",\n        \"messageid\": \"{{messageid}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{request_url}}",
+              "host": [
+                "{{request_url}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send indication - Read",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"method\": \"read\",\n    \"params\":{\n\t    \"orgid\": \"{{orgid}}\",\n        \"sessionid\": \"{{sessionid}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{request_url}}",
+              "host": [
+                "{{request_url}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send indication - Typing",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"method\": \"typing\",\n    \"params\":{\n\t    \"orgid\": \"{{orgid}}\",\n        \"sessionid\": \"{{sessionid}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{request_url}}",
+              "host": [
+                "{{request_url}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send indication - Updated",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"method\": \"updated\",\n    \"params\":{\n\t    \"orgid\": \"{{orgid}}\",\n        \"messageid\": \"{{messageid}}\",\n        \"content\": \"Hello Everyone!\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{request_url}}",
+              "host": [
+                "{{request_url}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send indication - Message",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"method\": \"message\",\n    \"params\":{\n\t    \"orgid\": \"{{orgid}}\",\n        \"from\": \"{{sender_phone}}\",\n        \"to\": \"{{user_phone}}\",\n        \"content\": \"Hello World!\",\n        \"sessionid\": \"1710004869211-d3103a34bd2ce6023a\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{request_url}}",
+              "host": [
+                "{{request_url}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Use these API methods to send messages and files to the Ringotel users."
+    },
+    {
+      "name": "Sync messages from external services",
+      "item": [
+        {
+          "name": "Create an empty session with a contact",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"method\": \"message\",\n    \"params\":{\n        \"from\": \"1234567890\",\n        \"to\": \"511\",\n        \"orgid\": \"17629027527954336546\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{request_url}}",
+              "host": [
+                "{{request_url}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create a new call activity",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"method\": \"message\",\n    \"params\":{\n        \"sessionid\": \"1763994283649-b99833518dce684f7c\",\n        \"content\": {\n            \"duration\":100,\n            \"caller\":\"511\",\n            \"called\":\"1234567890\",\n            \"subject\":\"Brief Utterances\",\n            \"comment\":\"The conversation consists of brief, repetitive utterances from both speakers, primarily 'Oh' and 'I don't know'.\",\n            \"transcription\":\"17191774976125638450-1759295823160-e4984da8007a55ac96.json\"\n        },\n        \"type\": 8,\n        \"timestamp\": 1733829203832,\n        \"orgid\": \"17629027527954336546\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{request_url}}",
+              "host": [
+                "{{request_url}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "To sync a message with a specific chat session, please use the standard “message“ method with the `sessionid` parameter:\n\n``` json\n{\n    \"method\": \"message\",\n    \"params\":{\n        \"from\": \"9003\",\n        \"to\": \"234567668\",\n        \"content\": \"Hello\",\n        \"orgid\": \"17076444409917912922\",\n        \"sessionid\": \"1710004869211-d3103a34bd2ce6023a\",\n        \"timestamp\": 1770118887507\n    }\n}\n\n ```\n\n``` json\n{\n    \"result\": {\n        \"messageid\": \"1710100373597-8b065154afbbddfb96\"\n    }\n}\n\n ```\n\n`sessionid` refers to the existing chat session, which you receive as a response from the API server once a chat has been created.\n\nA new “sessionid“ will be returned if a message is sent to a session which is already closed.\n\nIn addition, you can implicitly create a chat session for other users (if you need to sync messages with the users who don't have a chat session with an external number yet) by sending a `message` method without the `content` and `sessionid` parameters. Specify the external contact number in the `from` parameter and user’s extension number (for whom a chat session will be created) or an SMS number (DID) added via SMS integration in the `to` field:\n\n``` json\n{\n    \"method\": \"message\",\n    \"params\":{\n        \"from\": \"234567668\",\n        \"to\": \"9004\",\n        \"orgid\": \"17076444409917912922\"\n    }\n}\n\n ```\n\n``` json\n{\n    \"result\": {\n        \"sessionid\": \"1710098613465-02d8b0a8b078cf73e5\"\n    }\n}\n\n ```\n\nNow you can use the provided 'sessionid' in the follow-up API request to sync the message with the user's chat session:\n\n``` json\n{\n    \"method\": \"message\",\n    \"params\":{\n        \"from\": \"9003\",\n        \"to\": \"234567668\",\n        \"content\": \"Hello\",\n        \"orgid\": \"17076444409917912922\",\n        \"sessionid\": \"1710098613465-02d8b0a8b078cf73e5\"\n    }\n}\n\n ```\n\nAlternatively, instead of `content` you can specify the `messageid` parameter, which is particularly useful for syncing files:\n\n``` json\n{\n    \"method\": \"message\",\n    \"params\":{\n        \"from\": \"9003\",\n        \"to\": \"234567668\",\n        \"orgid\": \"17076444409917912922\",\n        \"messageid\": \"1710100665847-a1f4a223ffd202a9ea\",\n        \"sessionid\": \"1710098613465-02d8b0a8b078cf73e5\"\n    }\n}\n\n ```"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "token",
+      "value": "<Ringotel API Key>"
+    },
+    {
+      "key": "request_url",
+      "value": "https://shell.ringotel.co/api"
+    },
+    {
+      "key": "webhook_url",
+      "value": "https://api.example.com/webhook"
+    },
+    {
+      "key": "orgid",
+      "value": "16287540703457500320"
+    },
+    {
+      "key": "userid",
+      "value": "16287541154521992797"
+    },
+    {
+      "key": "senderid",
+      "value": "1a2b3c4d5e6f"
+    },
+    {
+      "key": "user_phone",
+      "value": "502"
+    },
+    {
+      "key": "sendername",
+      "value": "John Smith"
+    },
+    {
+      "key": "sender_phone",
+      "value": "1234567890"
+    },
+    {
+      "key": "sender_email",
+      "value": "johnsmith@example.com"
+    },
+    {
+      "key": "messageid",
+      "value": "1630253837469-a887a7c51d060d078a"
+    },
+    {
+      "key": "sessionid",
+      "value": "1630253837483-3fb8b0b9c7e935684a"
+    }
+  ]
+}
