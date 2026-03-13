@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-n8n community node for the Ringotel Admin (and future Messaging) APIs. Published to npm as `@dszp/n8n-nodes-ringotel`. Licensed MIT. Author: David Szpunar.
+n8n community node for the Ringotel Admin (and future Messaging) APIs. Published to npm as `n8n-nodes-ringotel`. Licensed MIT. Author: David Szpunar.
 
 - **Type**: Programmatic n8n node (not declarative) — chosen for RPC-style API (all POST to single endpoint with method/params JSON body)
 - **Node API Version**: 1 (stable)
