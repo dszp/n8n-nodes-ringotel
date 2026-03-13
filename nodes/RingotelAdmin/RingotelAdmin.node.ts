@@ -15,7 +15,9 @@ import {
 	ringotelAdminApiRequest,
 	testRingotelAdminCredential,
 	getOrganizationOptions,
+	getConnectionOptions,
 	invalidateOrgCache,
+	invalidateConnectionCache,
 } from './GenericFunctions';
 
 import { organizationOperations, organizationFields } from './descriptions/OrganizationDescription';
@@ -160,6 +162,7 @@ export class RingotelAdmin implements INodeType {
 		},
 		loadOptions: {
 			getOrganizations: getOrganizationOptions,
+			getConnections: getConnectionOptions,
 		},
 	};
 
@@ -183,6 +186,11 @@ export class RingotelAdmin implements INodeType {
 					responseData = await handleAiAgent.call(this, operation, i);
 				} else if (resource === 'call') {
 					responseData = await handleCall.call(this, operation, i);
+				} else if (resource === 'connection' && ['create', 'delete', 'update'].includes(operation)) {
+					const credentials = await this.getCredentials('ringotelAdminApi');
+					const orgid = this.getNodeParameter('organizationId', i) as string;
+					responseData = await handleConnection.call(this, operation, i);
+					invalidateConnectionCache(credentials, orgid);
 				} else if (resource === 'connection') {
 					responseData = await handleConnection.call(this, operation, i);
 				} else if (resource === 'contact') {

@@ -105,10 +105,15 @@ export const aiAgentFields: INodeProperties[] = [
 		},
 		options: [
 			{
-				displayName: 'Connection ID',
+				displayName: 'Connection Name or ID',
 				name: 'branchid',
-				type: 'string',
+				type: 'options',
+				typeOptions: {
+					loadOptionsMethod: 'getConnections',
+					loadOptionsDependsOn: ['organizationId'],
+				},
 				default: '',
+				description: 'The connection to assign. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 			},
 			{
 				displayName: 'Model',
@@ -144,10 +149,15 @@ export const aiAgentFields: INodeProperties[] = [
 		},
 		options: [
 			{
-				displayName: 'Connection ID',
+				displayName: 'Connection Name or ID',
 				name: 'branchid',
-				type: 'string',
+				type: 'options',
+				typeOptions: {
+					loadOptionsMethod: 'getConnections',
+					loadOptionsDependsOn: ['organizationId'],
+				},
 				default: '',
+				description: 'The connection to assign. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 			},
 			{
 				displayName: 'Model',

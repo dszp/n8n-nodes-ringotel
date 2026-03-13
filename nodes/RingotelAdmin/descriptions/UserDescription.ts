@@ -218,9 +218,13 @@ export const userFields: INodeProperties[] = [
 		description: 'The ID of the user',
 	},
 	{
-		displayName: 'Connection ID',
+		displayName: 'Connection Name or ID',
 		name: 'connectionId',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getConnections',
+			loadOptionsDependsOn: ['organizationId'],
+		},
 		required: true,
 		default: '',
 		displayOptions: {
@@ -229,7 +233,7 @@ export const userFields: INodeProperties[] = [
 				operation: ['attach', 'create', 'createMany', 'detach'],
 			},
 		},
-		description: 'The ID of the connection',
+		description: 'The connection to operate on. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 	},
 
 	// ------ user: attach ------
@@ -370,11 +374,15 @@ export const userFields: INodeProperties[] = [
 		},
 		options: [
 			{
-				displayName: 'Connection ID',
+				displayName: 'Connection Name or ID',
 				name: 'branchid',
-				type: 'string',
+				type: 'options',
+				typeOptions: {
+					loadOptionsMethod: 'getConnections',
+					loadOptionsDependsOn: ['organizationId'],
+				},
 				default: '',
-				description: 'Filter by connection ID',
+				description: 'Filter by connection. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 			},
 		],
 	},

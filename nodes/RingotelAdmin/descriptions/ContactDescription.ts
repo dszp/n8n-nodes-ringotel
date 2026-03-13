@@ -129,11 +129,15 @@ export const contactFields: INodeProperties[] = [
 		},
 		options: [
 			{
-				displayName: 'Branch ID',
+				displayName: 'Connection Name or ID',
 				name: 'branchid',
-				type: 'string',
+				type: 'options',
+				typeOptions: {
+					loadOptionsMethod: 'getConnections',
+					loadOptionsDependsOn: ['organizationId'],
+				},
 				default: '',
-				description: 'Connection ID to scope contacts to a specific connection',
+				description: 'Scope contacts to a specific connection. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 			},
 		],
 	},

@@ -83,16 +83,24 @@ export async function testRingotelAdminCredential(
 //  Organization cache for loadOptions dropdown
 // ──────────────────────────────────────────────────────────────────────────────
 
-interface OrgCacheEntry {
+interface CacheEntry {
 	data: INodePropertyOptions[];
 	timestamp: number;
 }
 
-const orgCache = new Map<string, OrgCacheEntry>();
-const ORG_CACHE_TTL = 10 * 60 * 1000; // 10 minutes
+const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
+const optionsCache = new Map<string, CacheEntry>();
 
 function getCredentialCacheKey(credentials: IDataObject): string {
 	return `${credentials.baseUrl}::${credentials.apiKey}`;
+}
+
+function getCachedOptions(cacheKey: string): INodePropertyOptions[] | undefined {
+	const cached = optionsCache.get(cacheKey);
+	if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+		return cached.data;
+	}
+	return undefined;
 }
 
 /**
@@ -100,7 +108,26 @@ function getCredentialCacheKey(credentials: IDataObject): string {
  * Call after org create/delete/update operations.
  */
 export function invalidateOrgCache(credentials: IDataObject): void {
-	orgCache.delete(getCredentialCacheKey(credentials));
+	const prefix = `org::${getCredentialCacheKey(credentials)}`;
+	optionsCache.delete(prefix);
+}
+
+/**
+ * Invalidate the connection cache for the given credentials and org.
+ * Call after connection create/delete/update operations.
+ */
+export function invalidateConnectionCache(credentials: IDataObject, orgId?: string): void {
+	const credKey = getCredentialCacheKey(credentials);
+	if (orgId) {
+		optionsCache.delete(`conn::${credKey}::${orgId}`);
+	} else {
+		// Invalidate all connection caches for this credential
+		for (const key of optionsCache.keys()) {
+			if (key.startsWith(`conn::${credKey}::`)) {
+				optionsCache.delete(key);
+			}
+		}
+	}
 }
 
 /**
@@ -111,12 +138,9 @@ export async function getOrganizationOptions(
 	this: ILoadOptionsFunctions,
 ): Promise<INodePropertyOptions[]> {
 	const credentials = await this.getCredentials('ringotelAdminApi');
-	const cacheKey = getCredentialCacheKey(credentials);
-	const cached = orgCache.get(cacheKey);
-
-	if (cached && Date.now() - cached.timestamp < ORG_CACHE_TTL) {
-		return cached.data;
-	}
+	const cacheKey = `org::${getCredentialCacheKey(credentials)}`;
+	const cached = getCachedOptions(cacheKey);
+	if (cached) return cached;
 
 	const orgs = (await ringotelAdminApiRequest.call(
 		this,
@@ -131,7 +155,42 @@ export async function getOrganizationOptions(
 		}))
 		.sort((a, b) => a.name.localeCompare(b.name));
 
-	orgCache.set(cacheKey, { data: options, timestamp: Date.now() });
+	optionsCache.set(cacheKey, { data: options, timestamp: Date.now() });
+	return options;
+}
 
+/**
+ * Load connections (branches) as dropdown options for a given organization.
+ * Depends on the organizationId parameter. Cached per credential + org for 10 minutes.
+ * Returns options sorted by name, formatted as "name (domain)".
+ */
+export async function getConnectionOptions(
+	this: ILoadOptionsFunctions,
+): Promise<INodePropertyOptions[]> {
+	const credentials = await this.getCredentials('ringotelAdminApi');
+	const orgId = this.getNodeParameter('organizationId', '') as string;
+
+	if (!orgId) {
+		return [];
+	}
+
+	const cacheKey = `conn::${getCredentialCacheKey(credentials)}::${orgId}`;
+	const cached = getCachedOptions(cacheKey);
+	if (cached) return cached;
+
+	const connections = (await ringotelAdminApiRequest.call(
+		this,
+		'getBranches',
+		{ orgid: orgId },
+	)) as IDataObject[];
+
+	const options: INodePropertyOptions[] = connections
+		.map((conn) => ({
+			name: `${conn.name} (${conn.domain})`,
+			value: conn.id as string,
+		}))
+		.sort((a, b) => a.name.localeCompare(b.name));
+
+	optionsCache.set(cacheKey, { data: options, timestamp: Date.now() });
 	return options;
 }
