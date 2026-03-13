@@ -440,15 +440,22 @@ async function handleUser(
 	i: number,
 ): Promise<IDataObject | IDataObject[]> {
 	if (operation === 'create') {
+		const orgid = this.getNodeParameter('organizationId', i) as string;
 		const params: IDataObject = {
-			orgid: this.getNodeParameter('organizationId', i) as string,
+			orgid,
 			branchid: this.getNodeParameter('connectionId', i) as string,
 			name: this.getNodeParameter('name', i) as string,
 			extension: this.getNodeParameter('extension', i) as string,
 		};
 		const additionalFields = this.getNodeParameter('additionalFields', i) as IDataObject;
 		Object.assign(params, additionalFields);
-		return await ringotelAdminApiRequest.call(this, 'createUser', params);
+		const result = (await ringotelAdminApiRequest.call(
+			this,
+			'createUser',
+			params,
+		)) as IDataObject;
+		result.orgid = orgid;
+		return result;
 	}
 
 	if (operation === 'createMany') {
@@ -463,11 +470,15 @@ async function handleUser(
 				itemIndex: i,
 			});
 		}
-		return await ringotelAdminApiRequest.call(this, 'createUsers', {
+		const results = (await ringotelAdminApiRequest.call(this, 'createUsers', {
 			orgid,
 			branchid,
 			users,
-		});
+		})) as IDataObject[];
+		for (const user of results) {
+			user.orgid = orgid;
+		}
+		return results;
 	}
 
 	if (operation === 'delete') {
@@ -495,7 +506,12 @@ async function handleUser(
 	if (operation === 'get') {
 		const userid = this.getNodeParameter('userId', i) as string;
 		const orgid = this.getNodeParameter('organizationId', i) as string;
-		return await ringotelAdminApiRequest.call(this, 'getUser', { id: userid, orgid });
+		const result = (await ringotelAdminApiRequest.call(this, 'getUser', {
+			id: userid,
+			orgid,
+		})) as IDataObject;
+		result.orgid = orgid;
+		return result;
 	}
 
 	if (operation === 'getMany') {
@@ -503,7 +519,15 @@ async function handleUser(
 		const additionalFields = this.getNodeParameter('additionalFields', i) as IDataObject;
 		const params: IDataObject = { orgid };
 		if (additionalFields.branchid) params.branchid = additionalFields.branchid;
-		return await ringotelAdminApiRequest.call(this, 'getUsers', params);
+		const results = (await ringotelAdminApiRequest.call(
+			this,
+			'getUsers',
+			params,
+		)) as IDataObject[];
+		for (const user of results) {
+			user.orgid = orgid;
+		}
+		return results;
 	}
 
 	if (operation === 'update') {

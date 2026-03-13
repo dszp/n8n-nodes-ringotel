@@ -105,7 +105,7 @@ export const aiAgentFields: INodeProperties[] = [
 		},
 		options: [
 			{
-				displayName: 'Connection Name or ID',
+				displayName: 'Connection (Branch) Name or ID',
 				name: 'branchid',
 				type: 'options',
 				typeOptions: {
@@ -113,7 +113,7 @@ export const aiAgentFields: INodeProperties[] = [
 					loadOptionsDependsOn: ['organizationId'],
 				},
 				default: '',
-				description: 'The connection to assign. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
+				description: 'The connection (branch) to assign. Maps to "branchid" in API results. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 			},
 			{
 				displayName: 'Model',
@@ -149,7 +149,7 @@ export const aiAgentFields: INodeProperties[] = [
 		},
 		options: [
 			{
-				displayName: 'Connection Name or ID',
+				displayName: 'Connection (Branch) Name or ID',
 				name: 'branchid',
 				type: 'options',
 				typeOptions: {
@@ -157,7 +157,7 @@ export const aiAgentFields: INodeProperties[] = [
 					loadOptionsDependsOn: ['organizationId'],
 				},
 				default: '',
-				description: 'The connection to assign. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
+				description: 'The connection (branch) to assign. Maps to "branchid" in API results. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 			},
 			{
 				displayName: 'Model',

@@ -62,7 +62,7 @@ export const connectionFields: INodeProperties[] = [
 	//  connection: shared fields
 	// ──────────────────────────────────────────────────────────────────────────────
 	{
-		displayName: 'Connection Name or ID',
+		displayName: 'Connection (Branch) Name or ID',
 		name: 'connectionId',
 		type: 'options',
 		typeOptions: {
@@ -77,7 +77,7 @@ export const connectionFields: INodeProperties[] = [
 				operation: ['delete', 'get', 'getOptions', 'setStatus', 'update'],
 			},
 		},
-		description: 'The connection to operate on. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
+		description: 'The connection (branch) to operate on. Maps to "branchid" in API results. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 	},
 	{
 		displayName: 'Organization Name or ID',

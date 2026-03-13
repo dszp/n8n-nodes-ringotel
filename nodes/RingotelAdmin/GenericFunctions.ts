@@ -88,16 +88,25 @@ interface CacheEntry {
 	timestamp: number;
 }
 
-const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
 const optionsCache = new Map<string, CacheEntry>();
 
 function getCredentialCacheKey(credentials: IDataObject): string {
 	return `${credentials.baseUrl}::${credentials.apiKey}`;
 }
 
-function getCachedOptions(cacheKey: string): INodePropertyOptions[] | undefined {
+function getCacheTtl(credentials: IDataObject): number {
+	const minutes = (credentials.cacheTtlMinutes as number) ?? 10;
+	return minutes * 60 * 1000;
+}
+
+function getCachedOptions(
+	cacheKey: string,
+	credentials: IDataObject,
+): INodePropertyOptions[] | undefined {
+	const ttl = getCacheTtl(credentials);
+	if (ttl <= 0) return undefined; // caching disabled
 	const cached = optionsCache.get(cacheKey);
-	if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+	if (cached && Date.now() - cached.timestamp < ttl) {
 		return cached.data;
 	}
 	return undefined;
@@ -139,7 +148,7 @@ export async function getOrganizationOptions(
 ): Promise<INodePropertyOptions[]> {
 	const credentials = await this.getCredentials('ringotelAdminApi');
 	const cacheKey = `org::${getCredentialCacheKey(credentials)}`;
-	const cached = getCachedOptions(cacheKey);
+	const cached = getCachedOptions(cacheKey, credentials);
 	if (cached) return cached;
 
 	const orgs = (await ringotelAdminApiRequest.call(
@@ -155,7 +164,9 @@ export async function getOrganizationOptions(
 		}))
 		.sort((a, b) => a.name.localeCompare(b.name));
 
-	optionsCache.set(cacheKey, { data: options, timestamp: Date.now() });
+	if (getCacheTtl(credentials) > 0) {
+		optionsCache.set(cacheKey, { data: options, timestamp: Date.now() });
+	}
 	return options;
 }
 
@@ -175,7 +186,7 @@ export async function getConnectionOptions(
 	}
 
 	const cacheKey = `conn::${getCredentialCacheKey(credentials)}::${orgId}`;
-	const cached = getCachedOptions(cacheKey);
+	const cached = getCachedOptions(cacheKey, credentials);
 	if (cached) return cached;
 
 	const connections = (await ringotelAdminApiRequest.call(
@@ -191,6 +202,8 @@ export async function getConnectionOptions(
 		}))
 		.sort((a, b) => a.name.localeCompare(b.name));
 
-	optionsCache.set(cacheKey, { data: options, timestamp: Date.now() });
+	if (getCacheTtl(credentials) > 0) {
+		optionsCache.set(cacheKey, { data: options, timestamp: Date.now() });
+	}
 	return options;
 }

@@ -1,5 +1,6 @@
 import type {
 	IAuthenticateGeneric,
+	ICredentialTestRequest,
 	ICredentialType,
 	INodeProperties,
 	Icon,
@@ -31,6 +32,14 @@ export class RingotelAdminApi implements ICredentialType {
 			description:
 				'The API key generated from your Ringotel Shell admin portal under API Settings',
 		},
+		{
+			displayName: 'Dropdown Cache (Minutes)',
+			name: 'cacheTtlMinutes',
+			type: 'number',
+			default: 10,
+			description:
+				'How long to cache dropdown options (Organizations, Connections) in minutes. Set to 0 to disable caching.',
+		},
 	];
 
 	authenticate: IAuthenticateGeneric = {
@@ -39,6 +48,21 @@ export class RingotelAdminApi implements ICredentialType {
 			headers: {
 				Authorization: '=Bearer {{$credentials.apiKey}}',
 			},
+		},
+	};
+
+	test: ICredentialTestRequest = {
+		request: {
+			method: 'POST',
+			url: '={{$credentials.baseUrl}}/api',
+			body: {
+				method: 'getOrganizations',
+				params: {},
+			},
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			json: true,
 		},
 	};
 }

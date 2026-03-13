@@ -129,7 +129,7 @@ export const contactFields: INodeProperties[] = [
 		},
 		options: [
 			{
-				displayName: 'Connection Name or ID',
+				displayName: 'Connection (Branch) Name or ID',
 				name: 'branchid',
 				type: 'options',
 				typeOptions: {
@@ -137,7 +137,7 @@ export const contactFields: INodeProperties[] = [
 					loadOptionsDependsOn: ['organizationId'],
 				},
 				default: '',
-				description: 'Scope contacts to a specific connection. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
+				description: 'Scope contacts to a specific connection (branch). Maps to "branchid" in API results. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 			},
 		],
 	},

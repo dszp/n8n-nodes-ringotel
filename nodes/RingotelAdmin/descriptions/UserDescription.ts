@@ -184,6 +184,24 @@ export const userFields: INodeProperties[] = [
 		description: 'The organization to operate on. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 	},
 	{
+		displayName: 'Connection (Branch) Name or ID',
+		name: 'connectionId',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getConnections',
+			loadOptionsDependsOn: ['organizationId'],
+		},
+		required: true,
+		default: '',
+		displayOptions: {
+			show: {
+				resource: ['user'],
+				operation: ['attach', 'create', 'createMany', 'detach'],
+			},
+		},
+		description: 'The connection (branch) to operate on. Maps to "branchid" in API results. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
+	},
+	{
 		displayName: 'User ID',
 		name: 'userId',
 		type: 'string',
@@ -216,24 +234,6 @@ export const userFields: INodeProperties[] = [
 			},
 		},
 		description: 'The ID of the user',
-	},
-	{
-		displayName: 'Connection Name or ID',
-		name: 'connectionId',
-		type: 'options',
-		typeOptions: {
-			loadOptionsMethod: 'getConnections',
-			loadOptionsDependsOn: ['organizationId'],
-		},
-		required: true,
-		default: '',
-		displayOptions: {
-			show: {
-				resource: ['user'],
-				operation: ['attach', 'create', 'createMany', 'detach'],
-			},
-		},
-		description: 'The connection to operate on. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 	},
 
 	// ------ user: attach ------
@@ -374,7 +374,7 @@ export const userFields: INodeProperties[] = [
 		},
 		options: [
 			{
-				displayName: 'Connection Name or ID',
+				displayName: 'Connection (Branch) Name or ID',
 				name: 'branchid',
 				type: 'options',
 				typeOptions: {
@@ -382,7 +382,7 @@ export const userFields: INodeProperties[] = [
 					loadOptionsDependsOn: ['organizationId'],
 				},
 				default: '',
-				description: 'Filter by connection. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
+				description: 'Filter by connection (branch). Maps to "branchid" in API results. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 			},
 		],
 	},
