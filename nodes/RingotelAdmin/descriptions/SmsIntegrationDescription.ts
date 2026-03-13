@@ -62,9 +62,12 @@ export const smsIntegrationFields: INodeProperties[] = [
 	//  smsTrunk: shared fields
 	// ──────────────────────────────────────────────────────────────────────────────
 	{
-		displayName: 'Organization ID',
+		displayName: 'Organization Name or ID',
 		name: 'organizationId',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getOrganizations',
+		},
 		required: true,
 		default: '',
 		displayOptions: {
@@ -82,7 +85,7 @@ export const smsIntegrationFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the organization',
+		description: 'The organization to operate on. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 	},
 	{
 		displayName: 'SMS Trunk ID',

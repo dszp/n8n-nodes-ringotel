@@ -142,6 +142,116 @@ export const accountFields: INodeProperties[] = [
 	},
 
 	// ──────────────────────────────────────────────────────────────────────────────
+	//  account: getAiUsageInfo
+	// ──────────────────────────────────────────────────────────────────────────────
+	{
+		displayName: 'Organization Domain',
+		name: 'domain',
+		type: 'string',
+		required: true,
+		default: '',
+		displayOptions: {
+			show: {
+				resource: ['account'],
+				operation: ['getAiUsageInfo'],
+			},
+		},
+		description: 'The domain of the organization to get AI usage for',
+	},
+	{
+		displayName: 'Begin',
+		name: 'begin',
+		type: 'number',
+		required: true,
+		default: 0,
+		displayOptions: {
+			show: {
+				resource: ['account'],
+				operation: ['getAiUsageInfo'],
+			},
+		},
+		description: 'Start timestamp in milliseconds (epoch)',
+	},
+	{
+		displayName: 'End',
+		name: 'end',
+		type: 'number',
+		required: true,
+		default: 0,
+		displayOptions: {
+			show: {
+				resource: ['account'],
+				operation: ['getAiUsageInfo'],
+			},
+		},
+		description: 'End timestamp in milliseconds (epoch)',
+	},
+
+	// ──────────────────────────────────────────────────────────────────────────────
+	//  account: getHistory
+	// ──────────────────────────────────────────────────────────────────────────────
+	{
+		displayName: 'Begin',
+		name: 'begin',
+		type: 'number',
+		required: true,
+		default: 0,
+		displayOptions: {
+			show: {
+				resource: ['account'],
+				operation: ['getHistory'],
+			},
+		},
+		description: 'Start timestamp in milliseconds (epoch)',
+	},
+	{
+		displayName: 'End',
+		name: 'end',
+		type: 'number',
+		required: true,
+		default: 0,
+		displayOptions: {
+			show: {
+				resource: ['account'],
+				operation: ['getHistory'],
+			},
+		},
+		description: 'End timestamp in milliseconds (epoch)',
+	},
+
+	// ──────────────────────────────────────────────────────────────────────────────
+	//  account: getStatistics
+	// ──────────────────────────────────────────────────────────────────────────────
+	{
+		displayName: 'Begin',
+		name: 'begin',
+		type: 'number',
+		required: true,
+		default: 0,
+		displayOptions: {
+			show: {
+				resource: ['account'],
+				operation: ['getStatistics'],
+			},
+		},
+		description: 'Start timestamp in milliseconds (epoch)',
+	},
+	{
+		displayName: 'End',
+		name: 'end',
+		type: 'number',
+		required: true,
+		default: 0,
+		displayOptions: {
+			show: {
+				resource: ['account'],
+				operation: ['getStatistics'],
+			},
+		},
+		description: 'End timestamp in milliseconds (epoch)',
+	},
+
+	// ──────────────────────────────────────────────────────────────────────────────
 	//  account: updateAdmin
 	// ──────────────────────────────────────────────────────────────────────────────
 	{

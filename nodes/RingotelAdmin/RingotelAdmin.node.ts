@@ -11,7 +11,12 @@ import type {
 } from 'n8n-workflow';
 import { NodeApiError, NodeOperationError } from 'n8n-workflow';
 
-import { ringotelAdminApiRequest, testRingotelAdminCredential } from './GenericFunctions';
+import {
+	ringotelAdminApiRequest,
+	testRingotelAdminCredential,
+	getOrganizationOptions,
+	invalidateOrgCache,
+} from './GenericFunctions';
 
 import { organizationOperations, organizationFields } from './descriptions/OrganizationDescription';
 import { connectionOperations, connectionFields } from './descriptions/ConnectionDescription';
@@ -153,6 +158,9 @@ export class RingotelAdmin implements INodeType {
 				}
 			},
 		},
+		loadOptions: {
+			getOrganizations: getOrganizationOptions,
+		},
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
@@ -165,7 +173,11 @@ export class RingotelAdmin implements INodeType {
 			try {
 				let responseData: IDataObject | IDataObject[];
 
-				if (resource === 'account') {
+				if (resource === 'organization' && ['create', 'delete', 'update'].includes(operation)) {
+					const credentials = await this.getCredentials('ringotelAdminApi');
+					responseData = await handleOrganization.call(this, operation, i);
+					invalidateOrgCache(credentials);
+				} else if (resource === 'account') {
 					responseData = await handleAccount.call(this, operation, i);
 				} else if (resource === 'aiAgent') {
 					responseData = await handleAiAgent.call(this, operation, i);
@@ -803,15 +815,22 @@ async function handleAccount(
 	}
 
 	if (operation === 'getHistory') {
-		return await ringotelAdminApiRequest.call(this, 'getAccountHistory', {});
+		const begin = this.getNodeParameter('begin', i) as number;
+		const end = this.getNodeParameter('end', i) as number;
+		return await ringotelAdminApiRequest.call(this, 'getAccountHistory', { begin, end });
 	}
 
 	if (operation === 'getStatistics') {
-		return await ringotelAdminApiRequest.call(this, 'getAccountStatistics', {});
+		const begin = this.getNodeParameter('begin', i) as number;
+		const end = this.getNodeParameter('end', i) as number;
+		return await ringotelAdminApiRequest.call(this, 'getAccountStatistics', { begin, end });
 	}
 
 	if (operation === 'getAiUsageInfo') {
-		return await ringotelAdminApiRequest.call(this, 'getAIUsageInfo', {});
+		const domain = this.getNodeParameter('domain', i) as string;
+		const begin = this.getNodeParameter('begin', i) as number;
+		const end = this.getNodeParameter('end', i) as number;
+		return await ringotelAdminApiRequest.call(this, 'getAIUsageInfo', { domain, begin, end });
 	}
 
 	if (operation === 'createAdmin') {
