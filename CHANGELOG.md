@@ -2,6 +2,11 @@
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.0.2](https://github.com/dszp/n8n-nodes-ringotel/releases/tag/v0.0.2) (2026-03-13)
+
+### Fixed
+- Upgraded GitHub Actions from v4 to v5 (`actions/checkout@v5`, `actions/setup-node@v5`) to resolve Node.js 20 deprecation warnings
+
 ## [0.0.1](https://github.com/dszp/n8n-nodes-ringotel/releases/tag/v0.0.1) (2026-03-13)
 
 ### Initial Release
