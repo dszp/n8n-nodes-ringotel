@@ -2,6 +2,15 @@
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Security
+- Removed hardcoded vendor API token from Messaging API Postman collection (`openapi/RingotelMessagingAPI.json`), replaced with `{{token}}` placeholder (vendor notified)
+- Pinned GitHub Actions to SHA hashes for supply chain protection (`actions/checkout@v5.0.1`, `actions/setup-node@v5.0.0`)
+
+### Fixed
+- Removed ineffective `unset` commands in CI workflow that don't persist across GitHub Actions steps
+
 ## [0.0.2](https://github.com/dszp/n8n-nodes-ringotel/releases/tag/v0.0.2) (2026-03-13)
 
 ### Fixed
